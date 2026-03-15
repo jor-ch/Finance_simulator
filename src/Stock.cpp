@@ -1,5 +1,5 @@
 #include "Asset.h"
-#include "Stocks.h"
+#include "Stock.h"
 
 Stock::Stock(double initial_stock_value)
 {
