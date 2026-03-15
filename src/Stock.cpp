@@ -4,6 +4,7 @@
 Stock::Stock(double initial_stock_value)
 {
     value = 0.0;
+    price_multiplier_from_t_0 = 1.0;
     price_multiplier = 1.0;
     price_per_stock = initial_stock_value;
     quantity = 0.0;
@@ -14,6 +15,12 @@ void Stock::updateValue(double change)
     value = value * price_multiplier + change;
     price_per_stock *= price_multiplier;
     quantity = value / price_per_stock;
+}
+
+void Stock::updateStockMultiplier() // currently a placeholder, this function is used to update the stock multiplier
+{
+    price_multiplier = 1.1;
+    price_multiplier_from_t_0 *= price_multiplier;
 }
 
 double Stock::purchaseStock(double stock_quantity) // remember that stock value has to be updated first before purchasing stock,
