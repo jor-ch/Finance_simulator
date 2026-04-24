@@ -133,12 +133,12 @@ Stock::Stock(std::string past_stock_data_file)
         counter++;
     }
 
-    std::cout << "first month and year are " << firstMonth << " , " << firstYear << std::endl;
-    std::cout << "prices are" << std::endl;
-    for (double price : past_stock_prices)
-    {
-        std::cout << price << std::endl;
-    }
+    // std::cout << "first month and year are " << firstMonth << " , " << firstYear << std::endl;
+    // std::cout << "prices are" << std::endl;
+    // for (double price : past_stock_prices)
+    // {
+    //     std::cout << price << std::endl;
+    // }
 }
 
 void Stock::updateValue(double change)
