@@ -17,8 +17,22 @@ Stock::Stock(double initial_stock_value)
     quantity = 0.0;
 }
 
-Stock::Stock(std::string past_stock_data_file)
+Stock::Stock(std::string past_stock_data_file, int referenceYear, int referenceMonth)
 {
+    // throw an error if reference year or month given is invalid
+    if (referenceYear < 1)
+    {
+        throw std::runtime_error("Invalid reference year! It is less than 1!");
+    }
+    else if (referenceMonth < 1)
+    {
+        throw std::runtime_error("Invalid reference month! It is less than 1!");
+    }
+    else if (referenceMonth > 12)
+    {
+        throw std::runtime_error("Invalid reference month! It is greater than 12!");
+    }
+
     // note that for the purpose of this study, there is only one .csv file used, which is the S&P500 monthly price data from 1871 to Mar 2026,
     // so I am not adding in error handling for different file formats, but I am
     // adding in error handling for empty lines and invalid data within the file
@@ -33,6 +47,8 @@ Stock::Stock(std::string past_stock_data_file)
     // The idea behind counter is to enable us to fill up the vector containing stock price
     // multipliers, which is used to predict future stock price movement.
     int counter = 0;
+    int obtainedYear, obtainedMonth; // this is for storing the date of the stock price data
+    // as we read through every line of the csv file.
 
     while (std::getline(file, line))
     {
@@ -60,7 +76,36 @@ Stock::Stock(std::string past_stock_data_file)
             continue;
         }
 
-        // Step 3, check if it is a comma next
+        // Step 3: Parse date string into std::tm structure
+        std::tm date = {};
+        std::istringstream dateStream(dateStr);
+
+        if (!(dateStream >> std::get_time(&date, "%B %d, %Y")))
+        {
+            std::cerr << "Failed to parse date: " << dateStr << std::endl;
+            continue;
+        }
+        obtainedYear = date.tm_year + 1900;
+        obtainedMonth = date.tm_mon + 1;
+
+        if (obtainedYear < referenceYear || (obtainedYear == referenceYear && obtainedMonth < referenceMonth))
+        {
+            // skip line since data is earlier than reference date.
+            continue;
+        }
+        else if (counter == 0 && (obtainedYear > referenceYear || (obtainedYear == referenceYear && obtainedMonth > referenceMonth)))
+        {
+            std::cerr << "Reference date is earlier than the first data point date, cannot run simulation, throwing exception." << std::endl;
+            throw std::runtime_error("Reference date is earlier than the first data point date");
+        }
+        else if (counter == 0)
+        {
+            firstYear = obtainedYear;
+            firstMonth = obtainedMonth;
+            std::cout << "first month and year are " << firstMonth << " " << firstYear << std::endl;
+        }
+
+        // Step 4, check if it is a comma next
         if (ss.peek() != ',')
         {
             std::cerr << "Invalid format (missing comma): " << line << std::endl;
@@ -68,14 +113,14 @@ Stock::Stock(std::string past_stock_data_file)
         }
         ss.get(); // consume ','
 
-        // Step 4: Read price, which may contain commas as thousand separators.
+        // Step 5: Read price, which may contain commas as thousand separators.
         // Hence, the price is read as string first.
         if (!(ss >> priceStr))
         {
             std::cerr << "Failed to read price: " << line << std::endl;
             continue;
         }
-        // Step 5: Remove commas and quotes from price string, then convert to double
+        // Step 6: Remove commas and quotes from price string, then convert to double
         priceStr.erase(std::remove(priceStr.begin(), priceStr.end(), ','), priceStr.end()); // remove commas from price string
         priceStr.erase(std::remove(priceStr.begin(), priceStr.end(), '"'), priceStr.end()); // remove quotes from price string if any
         try
@@ -93,16 +138,6 @@ Stock::Stock(std::string past_stock_data_file)
             continue;
         }
 
-        // Step 6: Parse date string into std::tm structure
-        std::tm date = {};
-        std::istringstream dateStream(dateStr);
-
-        if (!(dateStream >> std::get_time(&date, "%B %d, %Y")))
-        {
-            std::cerr << "Failed to parse date: " << dateStr << std::endl;
-            continue;
-        }
-
         // Step 7: Store values
         past_stock_prices.push_back(price);
 
@@ -113,8 +148,6 @@ Stock::Stock(std::string past_stock_data_file)
         if (counter == 0)
         {
             past_stock_price_multipliers.push_back(1.0);
-            firstYear = date.tm_year + 1900;
-            firstMonth = date.tm_mon + 1;
         }
         else
         {
@@ -134,11 +167,11 @@ Stock::Stock(std::string past_stock_data_file)
     }
 
     // std::cout << "first month and year are " << firstMonth << " , " << firstYear << std::endl;
-    // std::cout << "prices are" << std::endl;
-    // for (double price : past_stock_prices)
-    // {
-    //     std::cout << price << std::endl;
-    // }
+    std::cout << "prices are" << std::endl;
+    for (double price : past_stock_prices)
+    {
+        std::cout << price << std::endl;
+    }
 }
 
 void Stock::updateValue(double change)

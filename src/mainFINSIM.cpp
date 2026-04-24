@@ -4,7 +4,7 @@
 
 int main()
 {
-    Stock snp500("../data/SNP500_monthly_price_1871_to_Mar_2026.csv"); // ../ since directory is in build folder, so need to go back one folder
+    Stock snp500("../data/SNP500_monthly_price_1871_to_Mar_2026.csv", 1973, 11); // ../ since directory is in build folder, so need to go back one folder
     // Cash client_cash(2000.0);
     // Stock snp500(350.0);
     // double stock_expense = snp500.purchaseStock(3.0);
