@@ -30,6 +30,8 @@ Stock::Stock(std::string past_stock_data_file)
     std::ifstream file(past_stock_data_file);
     std::string line;
     double price;
+    // The idea behind counter is to enable us to fill up the vector containing stock price
+    // multipliers, which is used to predict future stock price movement.
     int counter = 0;
 
     while (std::getline(file, line))
@@ -104,6 +106,10 @@ Stock::Stock(std::string past_stock_data_file)
         // Step 7: Store values
         past_stock_prices.push_back(price);
 
+        // For the first data point, we set price multiplier to 1.0 since we are using the first
+        // data point as the base point to calculate future price movement.
+        // For subsequent data points, we calculate price multiplier based
+        // on price change from previous data point.
         if (counter == 0)
         {
             past_stock_price_multipliers.push_back(1.0);
