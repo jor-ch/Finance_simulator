@@ -33,8 +33,20 @@ public:
     double price_multiplier;                          // multiplier to see stock scaling from previous t to current t
     double price_per_stock;
     double quantity; // number of the stock the person has
+    int timeCounter; // this is to track how many time cycles have passed since start of simulation
     void updateValue(double change) override;
     void updateStockMultiplier(); // plan is to initialise a model to predict how the price would move, could be a random number for simplicity sake
+
+    /**
+     * @brief Updates the stock parameters at the start of each time cycle
+     * This function is to be done at the start of the time cycle
+     * to update the stock multiplier and stock value based on the stock price movement at the
+     * start of the time cycle, before any purchase or sale of stock is done within the time cycle
+     * This is important to ensure that the purchase and sale of stock within the time cycle is done
+     * based on the updated stock price after stock price movement at the start of the time cycle
+     *
+     */
+    void updateParameters();
     double purchaseStock(double stock_quantity);
     double sellStock(double stock_quantity);
 
