@@ -37,6 +37,11 @@ public:
     void updateValue(double change) override;
     void updateStockMultiplier(); // plan is to initialise a model to predict how the price would move, could be a random number for simplicity sake
 
+    // getter functions
+    inline double GetStockQuantity() { return quantity; }
+    inline double GetValue() { return value; }
+    inline double GetPricePerStock() { return price_per_stock; }
+
     /**
      * @brief Updates the stock parameters at the start of each time cycle
      * This function is to be done at the start of the time cycle
