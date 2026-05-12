@@ -18,6 +18,10 @@ int main()
                   << snp500.GetValue() << " and stock quantity is "
                   << snp500.GetStockQuantity() << " and price per stock is "
                   << snp500.GetPricePerStock() << std::endl;
+        // std::cout << "bank account has " << bankAccount.GetValue() << " and stock value is "
+        //           << snp500.GetValue() << " and stock quantity is "
+        //           << snp500.GetStockQuantity() << " and price per stock is "
+        //           << snp500.GetPricePerStock() << std::endl;
     }
     return 0;
 }
