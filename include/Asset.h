@@ -9,5 +9,7 @@ public:
     //(eg, cash is just adding income - expense, stock is add purchase + scale according to stock price change)
     // virtual void updateValue(double change) = 0;
 
+    virtual inline double GetValue() { return value; }
+
     virtual ~Asset() = default;
 };

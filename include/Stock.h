@@ -39,7 +39,6 @@ public:
 
     // getter functions
     inline double GetStockQuantity() { return quantity; }
-    inline double GetValue() { return value; }
     inline double GetPricePerStock() { return price_per_stock; }
 
     /**
