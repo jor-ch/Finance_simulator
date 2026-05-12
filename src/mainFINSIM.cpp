@@ -19,7 +19,7 @@ int main()
         }
         else
         {
-            double stock_quantity = snp500.purchaseStockByPrice(200);
+            stock_expense = snp500.purchaseStockByPrice(200);
         }
 
         std::cout << "stock quantity is " << snp500.GetStockQuantity() << " and stock value is " << snp500.GetValue() << std::endl;

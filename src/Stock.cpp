@@ -217,7 +217,7 @@ double Stock::purchaseStockByPrice(double inputCash)
     double stockQuantity = inputCash / price_per_stock;
     value += inputCash;
     quantity += stockQuantity;
-    return stockQuantity; // return number of stocks that are purchased from the inputCash
+    return inputCash; // return number of stocks that are purchased from the inputCash
 }
 
 double Stock::sellStock(double stock_quantity) // remember that stock value has to be updated first
