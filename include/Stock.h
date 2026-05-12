@@ -48,6 +48,7 @@ public:
      */
     void updateParameters();
     double purchaseStock(double stock_quantity);
+    double purchaseStockByPrice(double inputCash);
     double sellStock(double stock_quantity);
 
     int firstYear, firstMonth; // this is for storing the date of the first stock price data,

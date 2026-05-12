@@ -211,6 +211,15 @@ double Stock::purchaseStock(double stock_quantity) // remember that stock value 
     value += cost_price; // assuming no transaction fees
     return cost_price;   // count towards expenses
 }
+
+double Stock::purchaseStockByPrice(double inputCash)
+{
+    double stockQuantity = inputCash / price_per_stock;
+    value += inputCash;
+    quantity += stockQuantity;
+    return stockQuantity; // return number of stocks that are purchased from the inputCash
+}
+
 double Stock::sellStock(double stock_quantity) // remember that stock value has to be updated first
 {
     quantity -= stock_quantity;
