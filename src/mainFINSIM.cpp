@@ -1,4 +1,5 @@
 #include <iostream>
+#include <mutex>
 #include "Cash.h"
 #include "Stock.h"
 
@@ -20,6 +21,10 @@ int main()
         //           << snp500.GetValue() << " and stock quantity is "
         //           << snp500.GetStockQuantity() << " and price per stock is "
         //           << snp500.GetPricePerStock() << std::endl;
+    }
+    {
+        std::lock_guard<std::mutex> lock(coutMtx);
+        std::cout << "total cash spent is " << totalCashSpent << " and net worth is " << snp500.GetValue() << std::endl;
     }
     return 0;
 }
