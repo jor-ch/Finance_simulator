@@ -1,6 +1,8 @@
 #include <iostream>
 #include <mutex>
+#include <chrono>
 #include <thread>
+#include <iostream>
 #include "Cash.h"
 #include "Stock.h"
 
@@ -32,6 +34,18 @@ void runSimulation(std::mutex &coutMtx)
 int main()
 {
     std::mutex coutMtx_;
+    auto start = std::chrono::high_resolution_clock::now();
+    for (int i = 0; i < 10; i++)
+    {
+        runSimulation(coutMtx_);
+    }
+
+    auto end = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    std::cout << "simulation finished in " << duration.count() << std::endl;
+
+    std::cin.get();
+    start = std::chrono::high_resolution_clock::now();
 
     std::thread t1(runSimulation, std::ref(coutMtx_));
     std::thread t2(runSimulation, std::ref(coutMtx_));
@@ -44,6 +58,8 @@ int main()
     std::thread t9(runSimulation, std::ref(coutMtx_));
     std::thread t10(runSimulation, std::ref(coutMtx_));
 
+    end = std::chrono::high_resolution_clock::now();
+    duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
 
     t1.join();
     t2.join();
@@ -55,6 +71,7 @@ int main()
     t8.join();
     t9.join();
     t10.join();
+    std::cout << "simulation finished in " << duration.count() << std::endl;
 
     return 0;
 }
