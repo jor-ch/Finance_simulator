@@ -10,8 +10,19 @@ int main()
     for (int i = 0; i < 10; i++)
     {
         snp500.updateParameters();
-        stock_expense = snp500.purchaseStock(1.0);
-        std::cout << "stock expense is " << stock_expense << " and value is " << snp500.value << std::endl;
+        std::cout << "price per stock now is " << snp500.GetPricePerStock() << std::endl;
+        std::cout << "current stock value before purchase is " << snp500.GetValue() << std::endl;
+        if (i % 2 == 0)
+        {
+            stock_expense = snp500.purchaseStock(1.0);
+        }
+        else
+        {
+            double stock_quantity = snp500.purchaseStockByPrice(200);
+        }
+        // stock_expense = snp500.purchaseStock(1.0);
+
+        std::cout << "stock quantity is " << snp500.GetStockQuantity() << " and stock value is " << snp500.GetValue() << std::endl;
     }
     // Cash client_cash(2000.0);
     // Stock snp500(350.0);
