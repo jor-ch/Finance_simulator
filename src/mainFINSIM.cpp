@@ -3,8 +3,7 @@
 #include "Cash.h"
 #include "Stock.h"
 
-// for now we set it as one time step = 1 month
-int main()
+void runSimulation(std::mutex &coutMtx)
 {
     Stock snp500("../data/SNP500_monthly_price_1871_to_Mar_2026.csv", 1973, 11); // ../ since directory is in build folder, so need to go back one folder
     Cash bankAccount(0.0);                                                       // start with $0
@@ -26,5 +25,6 @@ int main()
         std::lock_guard<std::mutex> lock(coutMtx);
         std::cout << "total cash spent is " << totalCashSpent << " and net worth is " << snp500.GetValue() << std::endl;
     }
+}
     return 0;
 }
