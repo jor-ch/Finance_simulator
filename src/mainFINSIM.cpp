@@ -1,5 +1,6 @@
 #include <iostream>
 #include <mutex>
+#include <thread>
 #include "Cash.h"
 #include "Stock.h"
 
@@ -26,5 +27,34 @@ void runSimulation(std::mutex &coutMtx)
         std::cout << "total cash spent is " << totalCashSpent << " and net worth is " << snp500.GetValue() << std::endl;
     }
 }
+
+// for now we set it as one time step = 1 month
+int main()
+{
+    std::mutex coutMtx_;
+
+    std::thread t1(runSimulation, std::ref(coutMtx_));
+    std::thread t2(runSimulation, std::ref(coutMtx_));
+    std::thread t3(runSimulation, std::ref(coutMtx_));
+    std::thread t4(runSimulation, std::ref(coutMtx_));
+    std::thread t5(runSimulation, std::ref(coutMtx_));
+    std::thread t6(runSimulation, std::ref(coutMtx_));
+    std::thread t7(runSimulation, std::ref(coutMtx_));
+    std::thread t8(runSimulation, std::ref(coutMtx_));
+    std::thread t9(runSimulation, std::ref(coutMtx_));
+    std::thread t10(runSimulation, std::ref(coutMtx_));
+
+
+    t1.join();
+    t2.join();
+    t3.join();
+    t4.join();
+    t5.join();
+    t6.join();
+    t7.join();
+    t8.join();
+    t9.join();
+    t10.join();
+
     return 0;
 }
