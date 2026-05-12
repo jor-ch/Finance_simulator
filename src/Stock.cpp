@@ -103,7 +103,7 @@ Stock::Stock(std::string past_stock_data_file, int referenceYear, int referenceM
         {
             firstYear = obtainedYear;
             firstMonth = obtainedMonth;
-            std::cout << "first month and year are " << firstMonth << " " << firstYear << std::endl;
+            // std::cout << "first month and year are " << firstMonth << " " << firstYear << std::endl;
         }
 
         // Step 4, check if it is a comma next
