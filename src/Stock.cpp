@@ -182,7 +182,7 @@ Stock::Stock(std::string past_stock_data_file, int referenceYear, int referenceM
     timeCounter = 0;
 }
 
-void Stock::updateValue(double change)
+void Stock::updateValue()
 {
     price_per_stock = past_stock_prices[timeCounter];
     value = quantity * price_per_stock;
@@ -200,7 +200,7 @@ void Stock::updateParameters()
 {
     timeCounter++;
     updateStockMultiplier();
-    updateValue(0.0);
+    updateValue();
 }
 
 double Stock::purchaseStock(double stock_quantity) // remember that stock value has to be updated first before purchasing stock,

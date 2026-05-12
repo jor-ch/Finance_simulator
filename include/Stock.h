@@ -34,7 +34,7 @@ public:
     double price_per_stock;
     double quantity; // number of the stock the person has
     int timeCounter; // this is to track how many time cycles have passed since start of simulation
-    void updateValue(double change) override;
+    void updateValue();
     void updateStockMultiplier(); // plan is to initialise a model to predict how the price would move, could be a random number for simplicity sake
 
     // getter functions
