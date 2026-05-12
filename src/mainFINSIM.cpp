@@ -14,10 +14,6 @@ int main()
         snp500.updateParameters();
         double currentMoneyAvailable = bankAccount.GetValue();
         bankAccount.updateValue(-1.0 * snp500.purchaseStockByPrice(currentMoneyAvailable));
-        std::cout << "bank account has " << bankAccount.GetValue() << " and stock value is "
-                  << snp500.GetValue() << " and stock quantity is "
-                  << snp500.GetStockQuantity() << " and price per stock is "
-                  << snp500.GetPricePerStock() << std::endl;
         // std::cout << "bank account has " << bankAccount.GetValue() << " and stock value is "
         //           << snp500.GetValue() << " and stock quantity is "
         //           << snp500.GetStockQuantity() << " and price per stock is "
