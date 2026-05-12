@@ -2,6 +2,7 @@
 #include "Cash.h"
 #include "Stock.h"
 
+// for now we set it as one time step = 1 month
 int main()
 {
     Stock snp500("../data/SNP500_monthly_price_1871_to_Mar_2026.csv", 1973, 11); // ../ since directory is in build folder, so need to go back one folder
@@ -20,18 +21,8 @@ int main()
         {
             double stock_quantity = snp500.purchaseStockByPrice(200);
         }
-        // stock_expense = snp500.purchaseStock(1.0);
 
         std::cout << "stock quantity is " << snp500.GetStockQuantity() << " and stock value is " << snp500.GetValue() << std::endl;
     }
-    // Cash client_cash(2000.0);
-    // Stock snp500(350.0);
-    // double stock_expense = snp500.purchaseStock(3.0);
-    // snp500.updateStockMultiplier();
-    // snp500.updateValue(0.0);
-    // client_cash.updateValue(-stock_expense);
-    // std::cout << "client stock quantity and value is " << snp500.quantity
-    //           << " , " << snp500.value << std::endl;
-    // std::cout << "client is left with " << client_cash.value << std::endl;
     return 0;
 }
