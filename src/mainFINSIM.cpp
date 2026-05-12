@@ -6,10 +6,10 @@
 #include "Cash.h"
 #include "Stock.h"
 
-void runSimulation(std::mutex &coutMtx)
+void runSimulation(std::mutex &coutMtx, int startYear, int startMonth, int durationMonths, int startFunds)
 {
-    Stock snp500("../data/SNP500_monthly_price_1871_to_Mar_2026.csv", 1973, 11); // ../ since directory is in build folder, so need to go back one folder
-    Cash bankAccount(0.0);                                                       // start with $0
+    Stock snp500("../data/SNP500_monthly_price_1871_to_Mar_2026.csv", startYear, startMonth); // ../ since directory is in build folder, so need to go back one folder
+    Cash bankAccount(0.0);                                                                    // start with $0
     const double salary = 200.0;
     double totalCashSpent = 0.0;
     for (int i = 0; i < 36; i++)
@@ -19,10 +19,6 @@ void runSimulation(std::mutex &coutMtx)
         double currentMoneyAvailable = bankAccount.GetValue();
         bankAccount.updateValue(-1.0 * snp500.purchaseStockByPrice(currentMoneyAvailable));
         totalCashSpent += currentMoneyAvailable;
-        // std::cout << "bank account has " << bankAccount.GetValue() << " and stock value is "
-        //           << snp500.GetValue() << " and stock quantity is "
-        //           << snp500.GetStockQuantity() << " and price per stock is "
-        //           << snp500.GetPricePerStock() << std::endl;
     }
     {
         std::lock_guard<std::mutex> lock(coutMtx);
@@ -37,7 +33,7 @@ int main()
     auto start = std::chrono::high_resolution_clock::now();
     for (int i = 0; i < 10; i++)
     {
-        runSimulation(coutMtx_);
+        runSimulation(coutMtx_, 1973, 11, 36, 0.0);
     }
 
     auto end = std::chrono::high_resolution_clock::now();
@@ -47,16 +43,16 @@ int main()
     std::cin.get();
     start = std::chrono::high_resolution_clock::now();
 
-    std::thread t1(runSimulation, std::ref(coutMtx_));
-    std::thread t2(runSimulation, std::ref(coutMtx_));
-    std::thread t3(runSimulation, std::ref(coutMtx_));
-    std::thread t4(runSimulation, std::ref(coutMtx_));
-    std::thread t5(runSimulation, std::ref(coutMtx_));
-    std::thread t6(runSimulation, std::ref(coutMtx_));
-    std::thread t7(runSimulation, std::ref(coutMtx_));
-    std::thread t8(runSimulation, std::ref(coutMtx_));
-    std::thread t9(runSimulation, std::ref(coutMtx_));
-    std::thread t10(runSimulation, std::ref(coutMtx_));
+    std::thread t1(runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
+    std::thread t2(runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
+    std::thread t3(runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
+    std::thread t4(runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
+    std::thread t5(runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
+    std::thread t6(runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
+    std::thread t7(runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
+    std::thread t8(runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
+    std::thread t9(runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
+    std::thread t10(runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
 
     end = std::chrono::high_resolution_clock::now();
     duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
