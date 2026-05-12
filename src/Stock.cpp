@@ -167,23 +167,31 @@ Stock::Stock(std::string past_stock_data_file, int referenceYear, int referenceM
     }
 
     // std::cout << "first month and year are " << firstMonth << " , " << firstYear << std::endl;
-    std::cout << "prices are" << std::endl;
-    for (double price : past_stock_prices)
-    {
-        std::cout << price << std::endl;
-    }
+    // std::cout << "prices are" << std::endl;
+    // for (double price : past_stock_prices)
+    // {
+    //     std::cout << price << std::endl;
+    // }
+
+    value = 0.0;
+    price_multiplier_from_t_0 = 1.0;
+    price_multiplier = past_stock_price_multipliers[0];
+    price_per_stock = past_stock_prices[0];
+    quantity = 0.0;
+    timeCounter = 0;
 }
 
 void Stock::updateValue(double change)
 {
-    value = value * price_multiplier + change;
-    price_per_stock *= price_multiplier;
-    quantity = value / price_per_stock;
+    price_per_stock = past_stock_prices[timeCounter];
+    value = quantity * price_per_stock;
 }
 
 void Stock::updateStockMultiplier() // currently a placeholder, this function is used to update the stock multiplier
 {
-    price_multiplier = 1.1;
+    // price_multiplier = past_stock_price_multipliers[timeCounter];
+    // price_multiplier_from_t_0 *= price_multiplier;
+    price_multiplier = past_stock_prices[timeCounter] / past_stock_prices[timeCounter - 1];
     price_multiplier_from_t_0 *= price_multiplier;
 }
 
