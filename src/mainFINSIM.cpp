@@ -45,7 +45,7 @@ int main()
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
     std::cout << "simulation finished in " << duration.count() << std::endl;
 
-    std::cin.get();
+    // std::cin.get();
     start = std::chrono::high_resolution_clock::now();
 
     std::thread t1(runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
