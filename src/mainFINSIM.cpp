@@ -12,8 +12,7 @@
 // for linux
 // #include <sched.h>
 
-std::tuple<double, double> runSimulation(std::mutex &coutMtx,
-                                         int startYear,
+std::tuple<double, double> runSimulation(int startYear,
                                          int startMonth,
                                          int durationMonths,
                                          double startFunds)
@@ -41,8 +40,6 @@ std::tuple<double, double> runSimulation(std::mutex &coutMtx,
 // for now we set it as one time step = 1 month
 int main()
 {
-    std::mutex coutMtx_;
-
     // for inputs
     std::vector<int> startYearVec{1973, 1974};
     std::vector<int> startMonthVec{11, 11};
@@ -56,8 +53,7 @@ int main()
 
     for (int i = 0; i < startYearVec.size(); ++i)
     {
-        auto [totalCashSpent, netWorth] = runSimulation(coutMtx_,
-                                                        startYearVec[i],
+        auto [totalCashSpent, netWorth] = runSimulation(startYearVec[i],
                                                         startMonthVec[i],
                                                         durationMonthsVec[i],
                                                         initialInvestmentVec[i]);
