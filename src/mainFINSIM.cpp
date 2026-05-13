@@ -64,15 +64,15 @@ int main()
     // concurrent running of 50 simulations using threads
     // std::cin.get();
     start = std::chrono::high_resolution_clock::now();
-    std::vector<std::thread> threadPool;
+    std::vector<std::jthread> threadPool;
     for (int i = 0; i < 50; i++)
     {
         threadPool.emplace_back(runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
     }
-    for (auto &thread : threadPool)
-    {
-        thread.join();
-    }
+    // for (auto &thread : threadPool)
+    // {
+    //     thread.join();
+    // }
 
     // std::thread t1(runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
     // std::thread t2(runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
