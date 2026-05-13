@@ -3,6 +3,7 @@
 #include <chrono>
 #include <thread>
 #include <iostream>
+#include <future>
 #include "Cash.h"
 #include "Stock.h"
 
@@ -58,9 +59,6 @@ int main()
     std::thread t9(runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
     std::thread t10(runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
 
-    end = std::chrono::high_resolution_clock::now();
-    duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-
     t1.join();
     t2.join();
     t3.join();
@@ -71,6 +69,37 @@ int main()
     t8.join();
     t9.join();
     t10.join();
+
+    end = std::chrono::high_resolution_clock::now();
+    duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+
+    std::cout << "simulation finished in " << duration.count() << std::endl;
+
+    start = std::chrono::high_resolution_clock::now();
+    auto t1async = std::async(std::launch::async, runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
+    auto t2async = std::async(std::launch::async, runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
+    auto t3async = std::async(std::launch::async, runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
+    auto t4async = std::async(std::launch::async, runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
+    auto t5async = std::async(std::launch::async, runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
+    auto t6async = std::async(std::launch::async, runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
+    auto t7async = std::async(std::launch::async, runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
+    auto t8async = std::async(std::launch::async, runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
+    auto t9async = std::async(std::launch::async, runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
+    auto t10async = std::async(std::launch::async, runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
+
+    t1async.get();
+    t2async.get();
+    t3async.get();
+    t4async.get();
+    t5async.get();
+    t6async.get();
+    t7async.get();
+    t8async.get();
+    t9async.get();
+    t10async.get();
+    end = std::chrono::high_resolution_clock::now();
+    duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+
     std::cout << "simulation finished in " << duration.count() << std::endl;
 
     return 0;
