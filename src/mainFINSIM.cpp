@@ -6,6 +6,7 @@
 #include <future>
 #include <ranges>
 #include <format>
+#include <string>
 #include "Cash.h"
 #include "Stock.h"
 
@@ -54,11 +55,31 @@ int main()
 {
     std::mutex coutMtx_;
 
-    auto [totalCashSpent, netWorth, percentageGain] = runSimulation(coutMtx_, 1973, 11, 36, 0.0);
-    std::cout << "total cash spent is " << totalCashSpent
-              << " and net worth is " << netWorth
-              << " and percentage gain is " << percentageGain
-              << "%" << std::endl;
+    int startYear = 1973;
+    int startMonth = 11;
+    int durationMonths = 36;
+
+    auto [totalCashSpent, netWorth, percentageGain] = runSimulation(coutMtx_, startYear, startMonth, durationMonths, 0.0);
+    // std::cout << "total cash spent is " << totalCashSpent
+    //           << " and net worth is " << netWorth
+    //           << " and percentage gain is " << percentageGain
+    //           << "%" << std::endl;
+
+    // formatting of header printout
+    std::cout << std::format(
+        "{:<20} | {:<20} | {:<20} | {:<20} | {:<20}\n",
+        "Start Date(MM/YYYY)",
+        "Duration(months)",
+        "Total Cash Spent",
+        "Net Worth",
+        "% Gain");
+    std::cout << std::format(
+        "{:<20} | {:<20} | {:<20} | {:<20} | {:<20}\n",
+        std::format("{}/{}", startMonth, startYear),
+        durationMonths,
+        totalCashSpent,
+        netWorth,
+        percentageGain);
 
     // concurrent runing of 50 simulations
     // auto start = std::chrono::high_resolution_clock::now();
