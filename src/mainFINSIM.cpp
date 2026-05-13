@@ -69,33 +69,6 @@ int main()
     {
         threadPool.emplace_back(runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
     }
-    // for (auto &thread : threadPool)
-    // {
-    //     thread.join();
-    // }
-
-    // std::thread t1(runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
-    // std::thread t2(runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
-    // std::thread t3(runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
-    // std::thread t4(runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
-    // std::thread t5(runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
-    // std::thread t6(runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
-    // std::thread t7(runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
-    // std::thread t8(runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
-    // std::thread t9(runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
-    // std::thread t10(runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
-
-    // t1.join();
-    // t2.join();
-    // t3.join();
-    // t4.join();
-    // t5.join();
-    // t6.join();
-    // t7.join();
-    // t8.join();
-    // t9.join();
-    // t10.join();
-
     end = std::chrono::high_resolution_clock::now();
     duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
     printout = std::format("simulation finished in {:>10} microseconds", duration.count());
@@ -112,27 +85,6 @@ int main()
     {
         future.get();
     }
-    // auto t1async = std::async(std::launch::async, runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
-    // auto t2async = std::async(std::launch::async, runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
-    // auto t3async = std::async(std::launch::async, runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
-    // auto t4async = std::async(std::launch::async, runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
-    // auto t5async = std::async(std::launch::async, runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
-    // auto t6async = std::async(std::launch::async, runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
-    // auto t7async = std::async(std::launch::async, runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
-    // auto t8async = std::async(std::launch::async, runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
-    // auto t9async = std::async(std::launch::async, runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
-    // auto t10async = std::async(std::launch::async, runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
-
-    // t1async.get();
-    // t2async.get();
-    // t3async.get();
-    // t4async.get();
-    // t5async.get();
-    // t6async.get();
-    // t7async.get();
-    // t8async.get();
-    // t9async.get();
-    // t10async.get();
     end = std::chrono::high_resolution_clock::now();
     duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
     printout = std::format("simulation finished in {:>10} microseconds", duration.count());
