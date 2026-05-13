@@ -4,6 +4,8 @@
 #include <thread>
 #include <iostream>
 #include <future>
+#include <ranges>
+#include <format>
 #include "Cash.h"
 #include "Stock.h"
 
@@ -56,7 +58,8 @@ int main()
 
     auto end = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-    std::cout << "simulation finished in " << duration.count() << std::endl;
+    std::string printout = std::format("simulation finished in {:>10} microseconds", duration.count());
+    std::cout << printout << std::endl;
 
     // concurrent running of 10 simulations using threads
     // std::cin.get();
@@ -95,8 +98,8 @@ int main()
 
     end = std::chrono::high_resolution_clock::now();
     duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-
-    std::cout << "simulation finished in " << duration.count() << std::endl;
+    printout = std::format("simulation finished in {:>10} microseconds", duration.count());
+    std::cout << printout << std::endl;
 
     // concurrent running of 10 simulations using async
     start = std::chrono::high_resolution_clock::now();
@@ -123,8 +126,8 @@ int main()
     t10async.get();
     end = std::chrono::high_resolution_clock::now();
     duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-
-    std::cout << "simulation finished in " << duration.count() << std::endl;
+    printout = std::format("simulation finished in {:>10} microseconds", duration.count());
+    std::cout << printout << std::endl;
 
     return 0;
 }
