@@ -56,15 +56,29 @@ int main()
 {
     std::mutex coutMtx_;
 
-    int startYear = 1973;
-    int startMonth = 11;
-    int durationMonths = 36;
+    // for inputs
+    std::vector<int> startYearVec{1973, 1974};
+    std::vector<int> startMonthVec{11, 11};
+    std::vector<int> durationMonthsVec{36, 36};
+    std::vector<double> initialInvestmentVec{0.0, 0.0};
 
-    auto [totalCashSpent, netWorth, percentageGain] = runSimulation(coutMtx_, startYear, startMonth, durationMonths, 0.0);
-    // std::cout << "total cash spent is " << totalCashSpent
-    //           << " and net worth is " << netWorth
-    //           << " and percentage gain is " << percentageGain
-    //           << "%" << std::endl;
+    // for outputs
+    std::vector<double> totalCashSpentVec{};
+    std::vector<double> netWorthVec{};
+    std::vector<double> percentageGainVec{};
+    std::vector<double> pcntGaintest(totalCashSpentVec.size());
+
+    for (int i = 0; i < startYearVec.size(); ++i)
+    {
+        auto [totalCashSpent, netWorth, percentageGain] = runSimulation(coutMtx_,
+                                                                        startYearVec[i],
+                                                                        startMonthVec[i],
+                                                                        durationMonthsVec[i],
+                                                                        initialInvestmentVec[i]);
+        totalCashSpentVec.push_back(totalCashSpent);
+        netWorthVec.push_back(netWorth);
+        percentageGainVec.push_back(percentageGain);
+    }
 
     // formatting of header printout
     std::cout << std::format(
