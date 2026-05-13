@@ -46,6 +46,8 @@ void runSimulation(std::mutex &coutMtx,
 int main()
 {
     std::mutex coutMtx_;
+
+    // concurrent runing of 10 simulations
     auto start = std::chrono::high_resolution_clock::now();
     for (int i = 0; i < 10; i++)
     {
@@ -56,6 +58,7 @@ int main()
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
     std::cout << "simulation finished in " << duration.count() << std::endl;
 
+    // concurrent running of 10 simulations using threads
     // std::cin.get();
     start = std::chrono::high_resolution_clock::now();
 
@@ -86,6 +89,7 @@ int main()
 
     std::cout << "simulation finished in " << duration.count() << std::endl;
 
+    // concurrent running of 10 simulations using async
     start = std::chrono::high_resolution_clock::now();
     auto t1async = std::async(std::launch::async, runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
     auto t2async = std::async(std::launch::async, runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
