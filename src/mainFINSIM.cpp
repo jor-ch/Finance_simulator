@@ -7,12 +7,16 @@
 #include "Cash.h"
 #include "Stock.h"
 
+// for linux
+#include <sched.h>
+
 void runSimulation(std::mutex &coutMtx,
                    int startYear,
                    int startMonth,
                    int durationMonths,
                    int startFunds)
 {
+    int cpuinit = sched_getcpu();
     Stock snp500("../data/SNP500_monthly_price_1871_to_Mar_2026.csv", startYear, startMonth); // ../ since directory is in build folder, so need to go back one folder
     Cash bankAccount(startFunds);                                                             // start with $0
     const double salary = 200.0;
@@ -30,6 +34,12 @@ void runSimulation(std::mutex &coutMtx,
         std::cout << "total cash spent is " << totalCashSpent << " and net worth is " << snp500.GetValue() << std::endl;
     }
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
+    int cpuend = sched_getcpu();
+    {
+        std::lock_guard<std::mutex> lock(coutMtx);
+        std::cout << "simulation started on CPU " << cpuinit << " and ended on CPU " << cpuend << std::endl;
+    }
 }
 
 // for now we set it as one time step = 1 month
