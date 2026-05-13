@@ -61,28 +61,37 @@ int main()
     // concurrent running of 10 simulations using threads
     // std::cin.get();
     start = std::chrono::high_resolution_clock::now();
+    std::vector<std::thread> threadPool;
+    for (int i = 0; i < 10; i++)
+    {
+        threadPool.emplace_back(runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
+    }
+    for (auto &thread : threadPool)
+    {
+        thread.join();
+    }
 
-    std::thread t1(runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
-    std::thread t2(runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
-    std::thread t3(runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
-    std::thread t4(runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
-    std::thread t5(runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
-    std::thread t6(runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
-    std::thread t7(runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
-    std::thread t8(runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
-    std::thread t9(runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
-    std::thread t10(runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
+    // std::thread t1(runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
+    // std::thread t2(runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
+    // std::thread t3(runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
+    // std::thread t4(runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
+    // std::thread t5(runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
+    // std::thread t6(runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
+    // std::thread t7(runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
+    // std::thread t8(runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
+    // std::thread t9(runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
+    // std::thread t10(runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
 
-    t1.join();
-    t2.join();
-    t3.join();
-    t4.join();
-    t5.join();
-    t6.join();
-    t7.join();
-    t8.join();
-    t9.join();
-    t10.join();
+    // t1.join();
+    // t2.join();
+    // t3.join();
+    // t4.join();
+    // t5.join();
+    // t6.join();
+    // t7.join();
+    // t8.join();
+    // t9.join();
+    // t10.join();
 
     end = std::chrono::high_resolution_clock::now();
     duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
