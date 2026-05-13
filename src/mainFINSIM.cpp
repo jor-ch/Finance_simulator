@@ -10,19 +10,20 @@
 #include "Stock.h"
 
 // for linux
-#include <sched.h>
+// #include <sched.h>
 
-void runSimulation(std::mutex &coutMtx,
-                   int startYear,
-                   int startMonth,
-                   int durationMonths,
-                   int startFunds)
+std::tuple<double, double, double> runSimulation(std::mutex &coutMtx,
+                                                 int startYear,
+                                                 int startMonth,
+                                                 int durationMonths,
+                                                 int startFunds)
 {
-    int cpuinit = sched_getcpu();
+    // int cpuinit = sched_getcpu();
     Stock snp500("../data/SNP500_monthly_price_1871_to_Mar_2026.csv", startYear, startMonth); // ../ since directory is in build folder, so need to go back one folder
     Cash bankAccount(startFunds);                                                             // start with $0
     const double salary = 200.0;
     double totalCashSpent = 0.0;
+    double netWorth = 0.0;
     for (int i = 0; i < durationMonths; i++)
     {
         bankAccount.updateValue(salary); // simulate person getting salary
@@ -30,6 +31,7 @@ void runSimulation(std::mutex &coutMtx,
         double currentMoneyAvailable = bankAccount.GetValue();
         bankAccount.updateValue(-1.0 * snp500.purchaseStockByPrice(currentMoneyAvailable));
         totalCashSpent += currentMoneyAvailable;
+        netWorth = bankAccount.GetValue() + snp500.GetValue();
     }
     // {
     //     std::lock_guard<std::mutex> lock(coutMtx);
@@ -42,12 +44,21 @@ void runSimulation(std::mutex &coutMtx,
     //     std::lock_guard<std::mutex> lock(coutMtx);
     //     std::cout << "simulation started on CPU " << cpuinit << " and ended on CPU " << cpuend << std::endl;
     // }
+    double percentageGain = (netWorth - totalCashSpent) / totalCashSpent * 100.0;
+
+    return {totalCashSpent, netWorth, percentageGain};
 }
 
 // for now we set it as one time step = 1 month
 int main()
 {
     std::mutex coutMtx_;
+
+    auto [totalCashSpent, netWorth, percentageGain] = runSimulation(coutMtx_, 1973, 11, 36, 0.0);
+    std::cout << "total cash spent is " << totalCashSpent
+              << " and net worth is " << netWorth
+              << " and percentage gain is " << percentageGain
+              << "%" << std::endl;
 
     // concurrent runing of 50 simulations
     // auto start = std::chrono::high_resolution_clock::now();
