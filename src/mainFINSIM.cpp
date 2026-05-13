@@ -36,17 +36,6 @@ std::tuple<double, double> runSimulation(std::mutex &coutMtx,
         totalCashSpent += currentMoneyAvailable;
         netWorth = bankAccount.GetValue() + snp500.GetValue();
     }
-    // {
-    //     std::lock_guard<std::mutex> lock(coutMtx);
-    //     std::cout << "total cash spent is " << totalCashSpent << " and net worth is " << netWorth << std::endl;
-    // }
-    // std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-
-    // int cpuend = sched_getcpu();
-    // {
-    //     std::lock_guard<std::mutex> lock(coutMtx);
-    //     std::cout << "simulation started on CPU " << cpuinit << " and ended on CPU " << cpuend << std::endl;
-    // }
 
     return {totalCashSpent, netWorth};
 }
