@@ -7,17 +7,18 @@
 #include <ranges>
 #include <format>
 #include <string>
+#include <algorithm>
 #include "Cash.h"
 #include "Stock.h"
 
 // for linux
 // #include <sched.h>
 
-std::tuple<double, double, double> runSimulation(std::mutex &coutMtx,
-                                                 int startYear,
-                                                 int startMonth,
-                                                 int durationMonths,
-                                                 int startFunds)
+std::tuple<double, double> runSimulation(std::mutex &coutMtx,
+                                         int startYear,
+                                         int startMonth,
+                                         int durationMonths,
+                                         int startFunds)
 {
     // int cpuinit = sched_getcpu();
     Stock snp500("../data/SNP500_monthly_price_1871_to_Mar_2026.csv", startYear, startMonth); // ../ since directory is in build folder, so need to go back one folder
@@ -46,9 +47,8 @@ std::tuple<double, double, double> runSimulation(std::mutex &coutMtx,
     //     std::lock_guard<std::mutex> lock(coutMtx);
     //     std::cout << "simulation started on CPU " << cpuinit << " and ended on CPU " << cpuend << std::endl;
     // }
-    double percentageGain = (netWorth - totalCashSpent) / totalCashSpent * 100.0;
 
-    return {totalCashSpent, netWorth, percentageGain};
+    return {totalCashSpent, netWorth};
 }
 
 // for now we set it as one time step = 1 month
@@ -66,19 +66,26 @@ int main()
     std::vector<double> totalCashSpentVec{};
     std::vector<double> netWorthVec{};
     std::vector<double> percentageGainVec{};
-    std::vector<double> pcntGaintest(totalCashSpentVec.size());
 
     for (int i = 0; i < startYearVec.size(); ++i)
     {
-        auto [totalCashSpent, netWorth, percentageGain] = runSimulation(coutMtx_,
-                                                                        startYearVec[i],
-                                                                        startMonthVec[i],
-                                                                        durationMonthsVec[i],
-                                                                        initialInvestmentVec[i]);
+        auto [totalCashSpent, netWorth] = runSimulation(coutMtx_,
+                                                        startYearVec[i],
+                                                        startMonthVec[i],
+                                                        durationMonthsVec[i],
+                                                        initialInvestmentVec[i]);
         totalCashSpentVec.push_back(totalCashSpent);
         netWorthVec.push_back(netWorth);
-        percentageGainVec.push_back(percentageGain);
     }
+
+    std::transform(totalCashSpentVec.begin(),
+                   totalCashSpentVec.end(),
+                   netWorthVec.begin(),
+                   std::back_inserter(percentageGainVec),
+                   [](double x, double y)
+                   {
+                       return (y - x) / x * 100.0;
+                   });
 
     // formatting of header printout
     std::cout << std::format(
