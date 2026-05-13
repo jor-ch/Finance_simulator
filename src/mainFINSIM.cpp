@@ -32,15 +32,15 @@ void runSimulation(std::mutex &coutMtx,
         totalCashSpent += currentMoneyAvailable;
     }
     {
-        std::lock_guard<std::mutex> lock(coutMtx);
-        std::cout << "total cash spent is " << totalCashSpent << " and net worth is " << snp500.GetValue() << std::endl;
+        // std::lock_guard<std::mutex> lock(coutMtx);
+        // std::cout << "total cash spent is " << totalCashSpent << " and net worth is " << snp500.GetValue() << std::endl;
     }
-    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    // std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
     int cpuend = sched_getcpu();
     {
         std::lock_guard<std::mutex> lock(coutMtx);
-        std::cout << "simulation started on CPU " << cpuinit << " and ended on CPU " << cpuend << std::endl;
+        // std::cout << "simulation started on CPU " << cpuinit << " and ended on CPU " << cpuend << std::endl;
     }
 }
 
