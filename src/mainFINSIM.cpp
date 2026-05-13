@@ -6,13 +6,17 @@
 #include "Cash.h"
 #include "Stock.h"
 
-void runSimulation(std::mutex &coutMtx, int startYear, int startMonth, int durationMonths, int startFunds)
+void runSimulation(std::mutex &coutMtx,
+                   int startYear,
+                   int startMonth,
+                   int durationMonths,
+                   int startFunds)
 {
     Stock snp500("../data/SNP500_monthly_price_1871_to_Mar_2026.csv", startYear, startMonth); // ../ since directory is in build folder, so need to go back one folder
-    Cash bankAccount(0.0);                                                                    // start with $0
+    Cash bankAccount(startFunds);                                                             // start with $0
     const double salary = 200.0;
     double totalCashSpent = 0.0;
-    for (int i = 0; i < 36; i++)
+    for (int i = 0; i < durationMonths; i++)
     {
         bankAccount.updateValue(salary); // simulate person getting salary
         snp500.updateParameters();
