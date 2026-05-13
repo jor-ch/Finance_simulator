@@ -82,19 +82,25 @@ int main()
 
     // formatting of header printout
     std::cout << std::format(
-        "{:<20} | {:<20} | {:<20} | {:<20} | {:<20}\n",
-        "Start Date(MM/YYYY)",
+        "{:<15}|{:<18}|{:<22}|{:<18}|{:<15}|{:<15}\n",
+        "Start(MM/YYYY)",
         "Duration(months)",
-        "Total Cash Spent",
-        "Net Worth",
+        "Initial Investment($)",
+        "Cash Spent($)",
+        "Net Worth($)",
         "% Gain");
-    std::cout << std::format(
-        "{:<20} | {:<20} | {:<20} | {:<20} | {:<20}\n",
-        std::format("{}/{}", startMonth, startYear),
-        durationMonths,
-        totalCashSpent,
-        netWorth,
-        percentageGain);
+
+    for (int i = 0; i < totalCashSpentVec.size(); ++i)
+    {
+        std::cout << std::format(
+            "{:<15}|{:<18}|{:<22}|{:<18}|{:<15.2f}|{:<15.5f}\n",
+            std::format("{}/{}", startMonthVec[i], startYearVec[i]),
+            durationMonthsVec[i],
+            initialInvestmentVec[i],
+            totalCashSpentVec[i],
+            netWorthVec[i],
+            percentageGainVec[i]);
+    }
 
     // concurrent runing of 50 simulations
     // auto start = std::chrono::high_resolution_clock::now();
