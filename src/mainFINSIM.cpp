@@ -30,7 +30,8 @@ std::tuple<double, double, double> runSimulation(std::mutex &coutMtx,
         bankAccount.updateValue(salary); // simulate person getting salary
         snp500.updateParameters();
         double currentMoneyAvailable = bankAccount.GetValue();
-        bankAccount.updateValue(-1.0 * snp500.purchaseStockByPrice(currentMoneyAvailable));
+        double moneySpent = snp500.purchaseStockByPrice(currentMoneyAvailable);
+        bankAccount.updateValue(-1.0 * moneySpent);
         totalCashSpent += currentMoneyAvailable;
         netWorth = bankAccount.GetValue() + snp500.GetValue();
     }
