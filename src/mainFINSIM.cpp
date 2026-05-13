@@ -50,45 +50,45 @@ int main()
     std::mutex coutMtx_;
 
     // concurrent runing of 50 simulations
-    auto start = std::chrono::high_resolution_clock::now();
-    for (int i = 0; i < 50; i++)
-    {
-        runSimulation(coutMtx_, 1973, 11, 36, 0.0);
-    }
+    // auto start = std::chrono::high_resolution_clock::now();
+    // for (int i = 0; i < 50; i++)
+    // {
+    //     runSimulation(coutMtx_, 1973, 11, 36, 0.0);
+    // }
 
-    auto end = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-    std::string printout = std::format("simulation finished in {:>10} microseconds", duration.count());
-    std::cout << printout << std::endl;
+    // auto end = std::chrono::high_resolution_clock::now();
+    // auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    // std::string printout = std::format("simulation finished in {:>10} microseconds", duration.count());
+    // std::cout << printout << std::endl;
 
-    // concurrent running of 50 simulations using threads
-    // std::cin.get();
-    start = std::chrono::high_resolution_clock::now();
-    std::vector<std::jthread> threadPool;
-    for (int i = 0; i < 50; i++)
-    {
-        threadPool.emplace_back(runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
-    }
-    end = std::chrono::high_resolution_clock::now();
-    duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-    printout = std::format("simulation finished in {:>10} microseconds", duration.count());
-    std::cout << printout << std::endl;
+    // // concurrent running of 50 simulations using threads
+    // // std::cin.get();
+    // start = std::chrono::high_resolution_clock::now();
+    // std::vector<std::jthread> threadPool;
+    // for (int i = 0; i < 50; i++)
+    // {
+    //     threadPool.emplace_back(runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
+    // }
+    // end = std::chrono::high_resolution_clock::now();
+    // duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    // printout = std::format("simulation finished in {:>10} microseconds", duration.count());
+    // std::cout << printout << std::endl;
 
-    // concurrent running of 50 simulations using async
-    start = std::chrono::high_resolution_clock::now();
-    std::vector<std::future<void>> futurePool;
-    for (int i = 0; i < 50; i++)
-    {
-        futurePool.emplace_back(std::async(std::launch::async, runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0));
-    }
-    for (auto &future : futurePool)
-    {
-        future.get();
-    }
-    end = std::chrono::high_resolution_clock::now();
-    duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-    printout = std::format("simulation finished in {:>10} microseconds", duration.count());
-    std::cout << printout << std::endl;
+    // // concurrent running of 50 simulations using async
+    // start = std::chrono::high_resolution_clock::now();
+    // std::vector<std::future<void>> futurePool;
+    // for (int i = 0; i < 50; i++)
+    // {
+    //     futurePool.emplace_back(std::async(std::launch::async, runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0));
+    // }
+    // for (auto &future : futurePool)
+    // {
+    //     future.get();
+    // }
+    // end = std::chrono::high_resolution_clock::now();
+    // duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    // printout = std::format("simulation finished in {:>10} microseconds", duration.count());
+    // std::cout << printout << std::endl;
 
     return 0;
 }
