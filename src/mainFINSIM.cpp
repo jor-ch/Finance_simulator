@@ -76,6 +76,20 @@ void threadRunSim(const int startYear,
                                                              0.0}); // percentageGain is 0 since it is calculated during post-processing
 }
 
+// this function is to allow us to dictate what parameters we want for the simulations,
+// and to create the threads for the concurrent approach, in a more modular way
+void threadCreator(std::vector<SimulationInputsAndResults> &simParametersVec_Con,
+                   std::mutex &simulationMutex,
+                   std::vector<std::jthread> &threadPool)
+{
+    for (int i = 0; i < 100; i++)
+    {
+        threadPool.emplace_back(threadRunSim, 1900 + i, 1, 36, 0.0,
+                                std::ref(simParametersVec_Con),
+                                std::ref(simulationMutex));
+    }
+}
+
 // for now we set it as one time step = 1 month
 int main()
 {
@@ -90,12 +104,7 @@ int main()
     // concurrent approach
     std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
     std::vector<std::jthread> threadPool;
-    for (int i = 0; i < 100; i++)
-    {
-        threadPool.emplace_back(threadRunSim, 1900 + i, 1, 36, 0.0,
-                                std::ref(simParametersVec_Con),
-                                std::ref(simulationMutex));
-    }
+    threadCreator(simParametersVec_Con, simulationMutex, threadPool);
     for (auto &thread : threadPool)
     {
         thread.join();
