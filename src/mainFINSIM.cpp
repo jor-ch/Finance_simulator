@@ -107,6 +107,7 @@ int main()
     //  }
 
     // sequential approach
+    std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
     for (int i = 0; i < 100; ++i)
     {
         threadRunSim(1900 + i, 1, 36, 0.0,
@@ -118,6 +119,11 @@ int main()
                      netWorthVec_Seq,
                      simulationMutex);
     }
+    std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> duration = std::chrono::duration_cast<std::chrono::duration<double>>(end - start);
+    std::string printout = std::format("sequential simulation finished in {:>10} seconds", duration.count());
+    std::cout << printout << std::endl;
+
     // concurrent approach
     start = std::chrono::high_resolution_clock::now();
     std::vector<std::jthread> threadPool;
@@ -136,6 +142,11 @@ int main()
     {
         thread.join();
     }
+    end = std::chrono::high_resolution_clock::now();
+    duration = std::chrono::duration_cast<std::chrono::duration<double>>(end - start);
+    printout = std::format("concurrent simulation finished in {:>10} seconds", duration.count());
+    std::cout << printout << std::endl;
+
     // for sequential
     //  calculate percentage gain for each simulation, and store in percentageGainVec
     std::transform(totalCashSpentVec_Seq.begin(),
