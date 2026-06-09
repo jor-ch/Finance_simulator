@@ -78,8 +78,6 @@ void threadRunSim(const int startYear,
 // for now we set it as one time step = 1 month
 int main()
 {
-    // for sequential
-    std::vector<SimulationInputsAndResults> simParametersVec_Seq;
 
     // for concurrent
     std::vector<SimulationInputsAndResults> simParametersVec_Con;
@@ -88,21 +86,8 @@ int main()
     // write to the vectors at the same time
     std::mutex simulationMutex;
 
-    // sequential approach
-    std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
-    for (int i = 0; i < 100; ++i)
-    {
-        threadRunSim(1900 + i, 1, 36, 0.0,
-                     simParametersVec_Seq,
-                     simulationMutex);
-    }
-    std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> duration = std::chrono::duration_cast<std::chrono::duration<double>>(end - start);
-    std::string printout = std::format("sequential simulation finished in {:>10} seconds", duration.count());
-    std::cout << printout << std::endl;
-
     // concurrent approach
-    start = std::chrono::high_resolution_clock::now();
+    std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
     std::vector<std::jthread> threadPool;
     for (int i = 0; i < 100; i++)
     {
@@ -114,48 +99,10 @@ int main()
     {
         thread.join();
     }
-    end = std::chrono::high_resolution_clock::now();
-    duration = std::chrono::duration_cast<std::chrono::duration<double>>(end - start);
-    printout = std::format("concurrent simulation finished in {:>10} seconds", duration.count());
+    std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> duration = std::chrono::duration_cast<std::chrono::duration<double>>(end - start);
+    std::string printout = std::format("concurrent simulation finished in {:>10} seconds", duration.count());
     std::cout << printout << std::endl;
-
-    // for sequential
-    //  calculate percentage gain for each simulation, and store in percentageGainVec
-    // std::transform(totalCashSpentVec_Seq.begin(),
-    //                totalCashSpentVec_Seq.end(),
-    //                netWorthVec_Seq.begin(),
-    //                std::back_inserter(percentageGainVec_Seq),
-    //                [](double x, double y)
-    //                {
-    //                    return (y - x) / x * 100.0;
-    //                });
-    for (auto &simResult : simParametersVec_Seq)
-    {
-        simResult.percentageGain = (simResult.netWorth - simResult.totalCashSpent) / simResult.totalCashSpent * 100.0;
-    }
-
-    // formatting of header printout
-    std::cout << std::format(
-        "{:<15}|{:<18}|{:<22}|{:<18}|{:<15}|{:<15}\n",
-        "Start(MM/YYYY)",
-        "Duration(months)",
-        "Initial Investment($)",
-        "Cash Spent($)",
-        "Net Worth($)",
-        "% Gain");
-
-    for (int i = 0; i < simParametersVec_Seq.size(); ++i)
-    {
-        std::cout << std::format(
-            "{:<15}|{:<18}|{:<22}|{:<18}|{:<15.2f}|{:<15.5f}\n",
-            std::format("{}/{}", simParametersVec_Seq[i].startMonth, simParametersVec_Seq[i].startYear),
-            simParametersVec_Seq[i].durationMonths,
-            simParametersVec_Seq[i].initialInvestment,
-            simParametersVec_Seq[i].totalCashSpent,
-            simParametersVec_Seq[i].netWorth,
-            simParametersVec_Seq[i].percentageGain);
-    }
-    std::cout << std::endl;
 
     // for concurrent
     //  calculate percentage gain for each simulation, and store in percentageGainVec
@@ -194,46 +141,58 @@ int main()
             simParametersVec_Con[i].percentageGain);
     }
 
-    // concurrent runing of 50 simulations
-    // auto start = std::chrono::high_resolution_clock::now();
-    // for (int i = 0; i < 50; i++)
+    // for sequential (commented off for now since we are focusing on concurrent approach first)
+    // std::vector<SimulationInputsAndResults> simParametersVec_Seq;
+    // // sequential approach
+    // std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
+    // for (int i = 0; i < 100; ++i)
     // {
-    //     runSimulation(coutMtx_, 1973, 11, 36, 0.0);
+    //     threadRunSim(1900 + i, 1, 36, 0.0,
+    //                  simParametersVec_Seq,
+    //                  simulationMutex);
     // }
-
-    // auto end = std::chrono::high_resolution_clock::now();
-    // auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-    // std::string printout = std::format("simulation finished in {:>10} microseconds", duration.count());
+    // std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
+    // std::chrono::duration<double> duration = std::chrono::duration_cast<std::chrono::duration<double>>(end - start);
+    // std::string printout = std::format("sequential simulation finished in {:>10} seconds", duration.count());
     // std::cout << printout << std::endl;
 
-    // // concurrent running of 50 simulations using threads
-    // // std::cin.get();
-    // start = std::chrono::high_resolution_clock::now();
-    // std::vector<std::jthread> threadPool;
-    // for (int i = 0; i < 50; i++)
+    // // for sequential
+    // //  calculate percentage gain for each simulation, and store in percentageGainVec
+    // // std::transform(totalCashSpentVec_Seq.begin(),
+    // //                totalCashSpentVec_Seq.end(),
+    // //                netWorthVec_Seq.begin(),
+    // //                std::back_inserter(percentageGainVec_Seq),
+    // //                [](double x, double y)
+    // //                {
+    // //                    return (y - x) / x * 100.0;
+    // //                });
+    // for (auto &simResult : simParametersVec_Seq)
     // {
-    //     threadPool.emplace_back(runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0);
+    //     simResult.percentageGain = (simResult.netWorth - simResult.totalCashSpent) / simResult.totalCashSpent * 100.0;
     // }
-    // end = std::chrono::high_resolution_clock::now();
-    // duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-    // printout = std::format("simulation finished in {:>10} microseconds", duration.count());
-    // std::cout << printout << std::endl;
 
-    // // concurrent running of 50 simulations using async
-    // start = std::chrono::high_resolution_clock::now();
-    // std::vector<std::future<void>> futurePool;
-    // for (int i = 0; i < 50; i++)
+    // // formatting of header printout
+    // std::cout << std::format(
+    //     "{:<15}|{:<18}|{:<22}|{:<18}|{:<15}|{:<15}\n",
+    //     "Start(MM/YYYY)",
+    //     "Duration(months)",
+    //     "Initial Investment($)",
+    //     "Cash Spent($)",
+    //     "Net Worth($)",
+    //     "% Gain");
+
+    // for (int i = 0; i < simParametersVec_Seq.size(); ++i)
     // {
-    //     futurePool.emplace_back(std::async(std::launch::async, runSimulation, std::ref(coutMtx_), 1973, 11, 36, 0.0));
+    //     std::cout << std::format(
+    //         "{:<15}|{:<18}|{:<22}|{:<18}|{:<15.2f}|{:<15.5f}\n",
+    //         std::format("{}/{}", simParametersVec_Seq[i].startMonth, simParametersVec_Seq[i].startYear),
+    //         simParametersVec_Seq[i].durationMonths,
+    //         simParametersVec_Seq[i].initialInvestment,
+    //         simParametersVec_Seq[i].totalCashSpent,
+    //         simParametersVec_Seq[i].netWorth,
+    //         simParametersVec_Seq[i].percentageGain);
     // }
-    // for (auto &future : futurePool)
-    // {
-    //     future.get();
-    // }
-    // end = std::chrono::high_resolution_clock::now();
-    // duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-    // printout = std::format("simulation finished in {:>10} microseconds", duration.count());
-    // std::cout << printout << std::endl;
+    // std::cout << std::endl;
 
     return 0;
 }
