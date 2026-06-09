@@ -27,6 +27,7 @@ std::tuple<double, double> runSimulation(const int startYear,
                                          const double startFunds)
 {
     // int cpuinit = sched_getcpu();
+    // to do: add error handling if duration causes time to exceed stock price data available.
     Stock snp500("../data/SNP500_monthly_price_1871_to_Mar_2026.csv", startYear, startMonth); // ../ since directory is in build folder, so need to go back one folder
     Cash bankAccount(startFunds);                                                             // start with $0
     const double salary = 200.0;
