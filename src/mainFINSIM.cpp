@@ -111,7 +111,7 @@ int main()
     }
     std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> duration = std::chrono::duration_cast<std::chrono::duration<double>>(end - start);
-    std::string printout = std::format("concurrent simulation finished in {:>10} seconds", duration.count());
+    std::string printout = std::format("concurrent simulation finished in {:>10} seconds, with {} simulation runs", duration.count(), simParametersVec_Con.size());
     std::cout << printout << std::endl;
 
     // for concurrent
