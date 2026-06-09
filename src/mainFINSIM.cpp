@@ -12,6 +12,15 @@
 // for linux
 // #include <sched.h>
 
+// question for self: array of structs or struct of arrays?
+struct SimulationInputsAndResults
+{
+    int startYear, startMonth, durationMonths;
+    double initialInvestment, totalCashSpent;
+
+    double netWorth, percentageGain;
+};
+
 std::tuple<double, double> runSimulation(const int startYear,
                                          const int startMonth,
                                          const int durationMonths,
