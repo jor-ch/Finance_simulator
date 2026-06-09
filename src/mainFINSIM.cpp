@@ -96,17 +96,6 @@ int main()
     std::mutex simulationMutex;
 
     // sequential approach
-    //  for (int i = 0; i < startYearVec.size(); ++i)
-    //  {
-    //      auto [totalCashSpent, netWorth] = runSimulation(startYearVec[i],
-    //                                                      startMonthVec[i],
-    //                                                      durationMonthsVec[i],
-    //                                                      initialInvestmentVec[i]);
-    //      totalCashSpentVec.push_back(totalCashSpent);
-    //      netWorthVec.push_back(netWorth);
-    //  }
-
-    // sequential approach
     std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
     for (int i = 0; i < 100; ++i)
     {
