@@ -82,12 +82,24 @@ void threadCreator(std::vector<SimulationInputsAndResults> &simParametersVec_Con
                    std::mutex &simulationMutex,
                    std::vector<std::jthread> &threadPool)
 {
-    for (int i = 0; i < 100; i++)
+    // for 1 year simulations starting from Jan 1880 to Dec 2024 (so that sim ends on Dec 2025), with start point every month
+    int startYear = 1880;
+    int endYear = 2024;
+    for (int i = startYear; i <= endYear; i++)
     {
-        threadPool.emplace_back(threadRunSim, 1900 + i, 1, 36, 0.0,
-                                std::ref(simParametersVec_Con),
-                                std::ref(simulationMutex));
+        for (int j = 1; j <= 12; j++)
+        {
+            threadPool.emplace_back(threadRunSim, i, j, 12, 0.0,
+                                    std::ref(simParametersVec_Con),
+                                    std::ref(simulationMutex));
+        }
     }
+    // for (int i = 0; i < 100; i++)
+    // {
+    //     threadPool.emplace_back(threadRunSim, 1900 + i, 1, 36, 0.0,
+    //                             std::ref(simParametersVec_Con),
+    //                             std::ref(simulationMutex));
+    // }
 }
 
 // for now we set it as one time step = 1 month
