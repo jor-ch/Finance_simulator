@@ -80,7 +80,20 @@ int main()
     std::vector<double> netWorthVec_Seq{};
     std::vector<double> percentageGainVec_Seq{};
 
+    // for inputs (concurrent)
+    std::vector<int> startYearVec_Con{};
+    std::vector<int> startMonthVec_Con{};
+    std::vector<int> durationMonthsVec_Con{};
+    std::vector<double> initialInvestmentVec_Con{};
 
+    // for outputs (concurrent)
+    std::vector<double> totalCashSpentVec_Con{};
+    std::vector<double> netWorthVec_Con{};
+    std::vector<double> percentageGainVec_Con{};
+
+    // mutex for synchronisation of vectors when multiple threads are trying to
+    // write to the vectors at the same time
+    std::mutex simulationMutex;
 
     // sequential approach
     //  for (int i = 0; i < startYearVec.size(); ++i)
@@ -105,6 +118,24 @@ int main()
                      netWorthVec_Seq,
                      simulationMutex);
     }
+    // concurrent approach
+    start = std::chrono::high_resolution_clock::now();
+    std::vector<std::jthread> threadPool;
+    for (int i = 0; i < 100; i++)
+    {
+        threadPool.emplace_back(threadRunSim, 1900 + i, 1, 36, 0.0,
+                                std::ref(startYearVec_Con),
+                                std::ref(startMonthVec_Con),
+                                std::ref(durationMonthsVec_Con),
+                                std::ref(initialInvestmentVec_Con),
+                                std::ref(totalCashSpentVec_Con),
+                                std::ref(netWorthVec_Con),
+                                std::ref(simulationMutex));
+    }
+    for (auto &thread : threadPool)
+    {
+        thread.join();
+    }
     // for sequential
     //  calculate percentage gain for each simulation, and store in percentageGainVec
     std::transform(totalCashSpentVec_Seq.begin(),
@@ -125,6 +156,7 @@ int main()
         "Cash Spent($)",
         "Net Worth($)",
         "% Gain");
+
     for (int i = 0; i < totalCashSpentVec_Seq.size(); ++i)
     {
         std::cout << std::format(
@@ -136,11 +168,14 @@ int main()
             netWorthVec_Seq[i],
             percentageGainVec_Seq[i]);
     }
+    std::cout << std::endl;
 
-    std::transform(totalCashSpentVec.begin(),
-                   totalCashSpentVec.end(),
-                   netWorthVec.begin(),
-                   std::back_inserter(percentageGainVec),
+    // for concurrent
+    //  calculate percentage gain for each simulation, and store in percentageGainVec
+    std::transform(totalCashSpentVec_Con.begin(),
+                   totalCashSpentVec_Con.end(),
+                   netWorthVec_Con.begin(),
+                   std::back_inserter(percentageGainVec_Con),
                    [](double x, double y)
                    {
                        return (y - x) / x * 100.0;
@@ -156,16 +191,16 @@ int main()
         "Net Worth($)",
         "% Gain");
 
-    for (int i = 0; i < totalCashSpentVec.size(); ++i)
+    for (int i = 0; i < totalCashSpentVec_Con.size(); ++i)
     {
         std::cout << std::format(
             "{:<15}|{:<18}|{:<22}|{:<18}|{:<15.2f}|{:<15.5f}\n",
-            std::format("{}/{}", startMonthVec[i], startYearVec[i]),
-            durationMonthsVec[i],
-            initialInvestmentVec[i],
-            totalCashSpentVec[i],
-            netWorthVec[i],
-            percentageGainVec[i]);
+            std::format("{}/{}", startMonthVec_Con[i], startYearVec_Con[i]),
+            durationMonthsVec_Con[i],
+            initialInvestmentVec_Con[i],
+            totalCashSpentVec_Con[i],
+            netWorthVec_Con[i],
+            percentageGainVec_Con[i]);
     }
 
     // concurrent runing of 50 simulations
