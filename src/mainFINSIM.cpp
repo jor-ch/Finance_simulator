@@ -16,9 +16,9 @@
 struct SimulationInputsAndResults
 {
     int startYear, startMonth, durationMonths;
-    double initialInvestment, totalCashSpent;
+    double initialInvestment;
 
-    double netWorth, percentageGain;
+    double totalCashSpent, netWorth, percentageGain;
 };
 
 std::tuple<double, double> runSimulation(const int startYear,
