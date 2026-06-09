@@ -12,10 +12,10 @@
 // for linux
 // #include <sched.h>
 
-std::tuple<double, double> runSimulation(int startYear,
-                                         int startMonth,
-                                         int durationMonths,
-                                         double startFunds)
+std::tuple<double, double> runSimulation(const int startYear,
+                                         const int startMonth,
+                                         const int durationMonths,
+                                         const double startFunds)
 {
     // int cpuinit = sched_getcpu();
     Stock snp500("../data/SNP500_monthly_price_1871_to_Mar_2026.csv", startYear, startMonth); // ../ since directory is in build folder, so need to go back one folder
