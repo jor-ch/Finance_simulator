@@ -37,6 +37,35 @@ std::tuple<double, double> runSimulation(const int startYear,
     return {totalCashSpent, netWorth};
 }
 
+// basically a wrapper function so that we can call this function in jthread
+// and store the values in the vectors that we pass in by reference
+// mutex is for synchronisation of the vectors when multiple threads are trying to write
+// to the vectors at the same time
+void threadRunSim(const int startYear,
+                  const int startMonth,
+                  const int durationMonths,
+                  const double startFunds,
+                  std::vector<int> &startYearVec,
+                  std::vector<int> &startMonthVec,
+                  std::vector<int> &durationMonthsVec,
+                  std::vector<double> &initialInvestmentVec,
+                  std::vector<double> &totalCashSpentVec,
+                  std::vector<double> &netWorthVec,
+                  std::mutex &simulationMutex)
+{
+    auto [totalCashSpent, netWorth] = runSimulation(startYear,
+                                                    startMonth,
+                                                    durationMonths,
+                                                    startFunds);
+    std::lock_guard<std::mutex> lock(simulationMutex);
+    startYearVec.push_back(startYear);
+    startMonthVec.push_back(startMonth);
+    durationMonthsVec.push_back(durationMonths);
+    initialInvestmentVec.push_back(startFunds);
+    totalCashSpentVec.push_back(totalCashSpent);
+    netWorthVec.push_back(netWorth);
+}
+
 // for now we set it as one time step = 1 month
 int main()
 {
