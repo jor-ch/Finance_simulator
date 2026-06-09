@@ -69,25 +69,72 @@ void threadRunSim(const int startYear,
 // for now we set it as one time step = 1 month
 int main()
 {
-    // for inputs
-    std::vector<int> startYearVec{1973, 1974};
-    std::vector<int> startMonthVec{11, 11};
-    std::vector<int> durationMonthsVec{36, 36};
-    std::vector<double> initialInvestmentVec{0.0, 0.0};
+    // for inputs (sequential)
+    std::vector<int> startYearVec_Seq{};
+    std::vector<int> startMonthVec_Seq{};
+    std::vector<int> durationMonthsVec_Seq{};
+    std::vector<double> initialInvestmentVec_Seq{};
 
-    // for outputs
-    std::vector<double> totalCashSpentVec{};
-    std::vector<double> netWorthVec{};
-    std::vector<double> percentageGainVec{};
+    // for outputs (sequential)
+    std::vector<double> totalCashSpentVec_Seq{};
+    std::vector<double> netWorthVec_Seq{};
+    std::vector<double> percentageGainVec_Seq{};
 
-    for (int i = 0; i < startYearVec.size(); ++i)
+
+
+    // sequential approach
+    //  for (int i = 0; i < startYearVec.size(); ++i)
+    //  {
+    //      auto [totalCashSpent, netWorth] = runSimulation(startYearVec[i],
+    //                                                      startMonthVec[i],
+    //                                                      durationMonthsVec[i],
+    //                                                      initialInvestmentVec[i]);
+    //      totalCashSpentVec.push_back(totalCashSpent);
+    //      netWorthVec.push_back(netWorth);
+    //  }
+
+    // sequential approach
+    for (int i = 0; i < 100; ++i)
     {
-        auto [totalCashSpent, netWorth] = runSimulation(startYearVec[i],
-                                                        startMonthVec[i],
-                                                        durationMonthsVec[i],
-                                                        initialInvestmentVec[i]);
-        totalCashSpentVec.push_back(totalCashSpent);
-        netWorthVec.push_back(netWorth);
+        threadRunSim(1900 + i, 1, 36, 0.0,
+                     startYearVec_Seq,
+                     startMonthVec_Seq,
+                     durationMonthsVec_Seq,
+                     initialInvestmentVec_Seq,
+                     totalCashSpentVec_Seq,
+                     netWorthVec_Seq,
+                     simulationMutex);
+    }
+    // for sequential
+    //  calculate percentage gain for each simulation, and store in percentageGainVec
+    std::transform(totalCashSpentVec_Seq.begin(),
+                   totalCashSpentVec_Seq.end(),
+                   netWorthVec_Seq.begin(),
+                   std::back_inserter(percentageGainVec_Seq),
+                   [](double x, double y)
+                   {
+                       return (y - x) / x * 100.0;
+                   });
+
+    // formatting of header printout
+    std::cout << std::format(
+        "{:<15}|{:<18}|{:<22}|{:<18}|{:<15}|{:<15}\n",
+        "Start(MM/YYYY)",
+        "Duration(months)",
+        "Initial Investment($)",
+        "Cash Spent($)",
+        "Net Worth($)",
+        "% Gain");
+    for (int i = 0; i < totalCashSpentVec_Seq.size(); ++i)
+    {
+        std::cout << std::format(
+            "{:<15}|{:<18}|{:<22}|{:<18}|{:<15.2f}|{:<15.5f}\n",
+            std::format("{}/{}", startMonthVec_Seq[i], startYearVec_Seq[i]),
+            durationMonthsVec_Seq[i],
+            initialInvestmentVec_Seq[i],
+            totalCashSpentVec_Seq[i],
+            netWorthVec_Seq[i],
+            percentageGainVec_Seq[i]);
     }
 
     std::transform(totalCashSpentVec.begin(),
