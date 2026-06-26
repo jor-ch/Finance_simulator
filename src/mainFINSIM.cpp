@@ -137,6 +137,9 @@ int main()
         simResult.percentageGain = (simResult.netWorth - simResult.totalCashSpent) / simResult.totalCashSpent * 100.0;
     }
 
+    // sort results by duration, ascending order
+    std::ranges::sort(simParametersVec_Con, {}, &SimulationInputsAndResults::durationMonths); // sort by default order, using duration as the key
+
     // formatting of header printout
     std::cout << std::format(
         "{:<15}|{:<18}|{:<22}|{:<18}|{:<15}|{:<15}\n",
