@@ -240,5 +240,29 @@ int main()
         it = groupEnd;
     }
 
+    std::cout << std::endl;
+    std::cout << "Analysis Results:" << std::endl;
+    // formatting of header printout
+    std::cout << std::format(
+        "{:<18}|{:<18}|{:<18}|{:<18}|{:<18}|{:<18}\n",
+        "Duration(months)",
+        "Mean % gain",
+        "Median % gain",
+        "Std Dev % gain",
+        "Min % Gain",
+        "Max % Gain");
+
+    for (int i = 0; i < statsVec.size(); ++i)
+    {
+        std::cout << std::format(
+            "{:<18}|{:<18}|{:<18}|{:<18}|{:<18}|{:<18}\n",
+            statsVec[i].durationMonths,
+            statsVec[i].meanPercentageGain,
+            statsVec[i].medianPercentageGain,
+            statsVec[i].stdDevPercentageGain,
+            statsVec[i].minPercentageGain,
+            statsVec[i].maxPercentageGain);
+    }
+
     return 0;
 }
