@@ -82,30 +82,55 @@ void threadCreator(std::vector<SimulationInputsAndResults> &simParametersVec_Con
                    std::mutex &simulationMutex,
                    std::vector<std::jthread> &threadPool)
 {
-    // for 1 year simulations starting from Jan 1880 to Dec 2024 (so that sim ends on Dec 2025), with start point every month
-    int startYear = 1880;
-    int endYear = 2024;
-    for (int i = startYear; i <= endYear; i++)
+    int dataStartYear = 1871;                                        // csv data starts from Jan 1871
+    int dataEndYear = 2025;                                          // we want data up to December, for simplicity
+    const std::vector<int> durationVec{1, 2 /*, 3, 5, 10, 20, 30*/}; // duration in years
+    std::vector<int> endYearVec(durationVec.size(), 0);
+    for (int i = 0; i < durationVec.size(); i++)
     {
-        for (int j = 1; j <= 12; j++)
+        endYearVec[i] = dataEndYear - durationVec[i]; // since we want to end the simulation at dataEndYear, and the last sim
+                                                      // commences at the endYear, so need to make sure it does not overshoot the data from csv
+    }
+    for (int i = dataStartYear; i <= dataEndYear; i++)
+    {
+        for (int j = 0; j < endYearVec.size(); j++)
         {
-            threadPool.emplace_back(threadRunSim, i, j, 12, 0.0,
-                                    std::ref(simParametersVec_Con),
-                                    std::ref(simulationMutex));
+            if (i <= endYearVec[j])
+            {
+                for (int k = 1; k <= 12; k++) // start sim for every month in each year
+                {
+                    threadPool.emplace_back(threadRunSim, i, k, durationVec[j] * 12, 0.0,
+                                            std::ref(simParametersVec_Con),
+                                            std::ref(simulationMutex));
+                }
+            }
         }
     }
 
-    // for 3 year simulations starting from Jan 1880 to Dec 2024 (so that sim ends on Dec 2025), with start point every month
-    endYear = 2022; // since we want 3 year simulations, the latest start year would be 2022
-    for (int i = startYear; i <= endYear; i++)
-    {
-        for (int j = 1; j <= 12; j++)
-        {
-            threadPool.emplace_back(threadRunSim, i, j, 36, 0.0,
-                                    std::ref(simParametersVec_Con),
-                                    std::ref(simulationMutex));
-        }
-    }
+    // // for 1 year simulations starting from Jan 1880 to Dec 2024 (so that sim ends on Dec 2025), with start point every month
+    // int startYear = 1880;
+    // int endYear = 2024;
+    // for (int i = startYear; i <= endYear; i++)
+    // {
+    //     for (int j = 1; j <= 12; j++)
+    //     {
+    //         threadPool.emplace_back(threadRunSim, i, j, 12, 0.0,
+    //                                 std::ref(simParametersVec_Con),
+    //                                 std::ref(simulationMutex));
+    //     }
+    // }
+
+    // // for 3 year simulations starting from Jan 1880 to Dec 2024 (so that sim ends on Dec 2025), with start point every month
+    // endYear = 2022; // since we want 3 year simulations, the latest start year would be 2022
+    // for (int i = startYear; i <= endYear; i++)
+    // {
+    //     for (int j = 1; j <= 12; j++)
+    //     {
+    //         threadPool.emplace_back(threadRunSim, i, j, 36, 0.0,
+    //                                 std::ref(simParametersVec_Con),
+    //                                 std::ref(simulationMutex));
+    //     }
+    // }
     // for (int i = 0; i < 100; i++)
     // {
     //     threadPool.emplace_back(threadRunSim, 1900 + i, 1, 36, 0.0,
