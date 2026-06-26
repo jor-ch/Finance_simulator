@@ -7,6 +7,7 @@
 #include <string>
 #include <algorithm>
 #include <ranges>
+#include <cmath>
 #include "Cash.h"
 #include "Stock.h"
 
@@ -116,6 +117,59 @@ void threadCreator(std::vector<SimulationInputsAndResults> &simParametersVec_Con
             }
         }
     }
+}
+
+// for post-processing of simulation results
+statsGroupedByDuration calculateStats(std::vector<SimulationInputsAndResults>::iterator startIt,
+                                      std::vector<SimulationInputsAndResults>::iterator endIt)
+{
+    statsGroupedByDuration stats{};
+    stats.durationMonths = startIt->durationMonths;
+
+    const size_t numResults = std::distance(startIt, endIt);
+
+    // calculate mean
+    double sum = 0.0;
+    for (auto it = startIt; it != endIt; ++it)
+    {
+        sum += it->percentageGain;
+    }
+
+    stats.meanPercentageGain = sum / numResults;
+
+    // calculate median
+    std::vector<double> percentageGains;
+    percentageGains.reserve(numResults);
+    for (auto it = startIt; it != endIt; ++it)
+    {
+        percentageGains.push_back(it->percentageGain);
+    }
+    std::ranges::sort(percentageGains);
+    if (numResults % 2 == 0)
+    {
+        stats.medianPercentageGain = (percentageGains[numResults / 2 - 1] + percentageGains[numResults / 2]) / 2.0;
+    }
+    else
+    {
+        stats.medianPercentageGain = percentageGains[numResults / 2];
+    }
+
+    // calculate standard deviation
+    double variance = 0.0;
+    for (auto it = startIt; it != endIt; ++it)
+    {
+        double difference = it->percentageGain - stats.meanPercentageGain;
+        variance += difference * difference;
+    }
+    variance /= numResults;
+    stats.stdDevPercentageGain = std::sqrt(variance);
+
+    // calculate min and max
+    auto [minIt, maxIt] = std::minmax_element(percentageGains.begin(), percentageGains.end());
+    stats.minPercentageGain = *minIt;
+    stats.maxPercentageGain = *maxIt;
+
+    return stats;
 }
 
 // for now we set it as one time step = 1 month
