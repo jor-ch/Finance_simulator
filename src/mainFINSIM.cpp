@@ -21,6 +21,15 @@ struct SimulationInputsAndResults
 
     double totalCashSpent, netWorth, percentageGain;
 };
+struct statsGroupedByDuration
+{
+    int durationMonths;
+    double meanPercentageGain;
+    double medianPercentageGain;
+    double stdDevPercentageGain;
+    double minPercentageGain;
+    double maxPercentageGain;
+};
 
 std::tuple<double, double> runSimulation(const int startYear,
                                          const int startMonth,
