@@ -226,6 +226,19 @@ int main()
             simParametersVec_Con[i].percentageGain);
     }
 
+    // analyse data from each duration group, and store results in statsVec
+    std::vector<statsGroupedByDuration> statsVec;
+
+    // use for loop approach through the sorted results to analyse data from each duration group
+    auto it = simParametersVec_Con.begin();
+    while (it != simParametersVec_Con.end())
+    {
+        auto groupEnd = std::ranges::find_if(it, simParametersVec_Con.end(), [&](const auto &simResult)
+                                             { return simResult.durationMonths != it->durationMonths; });
+
+        statsVec.push_back(calculateStats(it, groupEnd));
+        it = groupEnd;
+    }
 
     return 0;
 }
