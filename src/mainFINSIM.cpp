@@ -6,6 +6,7 @@
 #include <format>
 #include <string>
 #include <algorithm>
+#include <ranges>
 #include "Cash.h"
 #include "Stock.h"
 
